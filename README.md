@@ -1,2 +1,2 @@
-# gabimar
-Esta es mi página personal
+# Métodos analíticos de simulación y optimización
+
