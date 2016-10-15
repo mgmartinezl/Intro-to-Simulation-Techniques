@@ -1,0 +1,52 @@
+Problema de los almanaques
+
+#Lo primero es generar la función de distribución acumulada para esta distribución empírica
+Demanda <- c(100, 150, 200, 250, 300)
+Probabilidad <- c(0.3, 0.2, 0.3, 0.15, 0.05)
+ProbAcum <- c (0.3, 0.5, 0.8, 0.95, 1)
+Almanaques <- data.frame(Demanda, Probabilidad)
+hist(Almanaques$Probabilidad)
+Almanaques <- cbind(Almanaques, ProbAcum)
+
+#Ahora, iniciamos las compras en 50, para ir añadiendo 50 en cada iteración en la que evaluaremos las cantidades a comprar posibles.
+Comp <- 50
+
+#Creamos un vector vacío donde podremos almacenar las utilidades obtenidas con cada demanda y así podremos compararlas.
+x <- c()
+
+#Generamos 5000 números aleatorios para la simulación. Consideramos este número suficiente para que alcance su estado de estabilidad.
+r <- runif(5000)
+
+#Iteramos cada una de las cantidades a comprar posibles. Iniciamos la utilidad final (UFinal) en cero y las compras en 100.
+for (i in seq(1:5)) {
+  UFinal <- 0
+  Comp = Comp + 50
+  #A continuación iteramos cada uno de los números aleatorios para hallar la inversa de la función de distribución acumulada.
+    for (i in r) {
+      count <- 1
+      while (i>ProbAcum[count])
+      count = count + 1
+      end
+      #Aquí obtendremos la demanda ideal para cada número aleatorio generado.
+	  Dem <- Demanda[count]
+	  #Ahora calculamos la utilidad y los costos de oportunidad para dos escenarios: cuando la demanda supera las compras y viceversa.
+      if (Dem > Comp) {
+      U <- Comp * 2.5
+      CO <- (Dem - Comp) * 2.5 
+      } else {
+      U <- Dem * 2.5
+      CO <- (Comp - Dem) * 5 
+      }
+	  #Aquí almacenaremos la utilidad final para cada número.
+      UFinal = UFinal + (U - CO)
+    }
+#Aquí guardaremos las utilidades finales para cada cantidad a comprar.	
+UP <- UFinal/5000
+x <- append(x, UP)
+}
+
+#Ahora imprimimos las utilidades totales para cada cantidad a comprar y podemos compararlas.
+print(x)
+
+#Al correr este código, obtenemos el siguiente vector de utilidades: [1]   71.525  170.025  164.425   10.525 -214.575.
+#Por lo tanto, podemos concluir que la mejor opción es comprar 150 almanaques, pues este valor maximizará las utilidades del negocio.
